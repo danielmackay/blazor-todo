@@ -1,0 +1,53 @@
+﻿@page "/todos"
+
+
+<MudText Typo="Typo.h2">Todos</MudText>
+
+<MudForm>
+    <MudGrid>
+        <MudItem sm="10" xs="12">
+            <MudTextField @bind-Value="TextValue" Label="Add your todo" Variant="Variant.Text" @onkeydown="@OnKeyDown"></MudTextField>
+        </MudItem>
+        <MudItem sm="2" xs="12">
+            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" OnClick="AddTodo">Add</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudForm>
+
+
+<div class="mt-10"></div>
+
+@if (TodoList.Count == 0)
+{
+    <MudText Typo="Typo.body1">No Todos</MudText>
+}
+
+@foreach (var todo in TodoList)
+{
+    <MudText Typo="Typo.body1">@todo.Text</MudText>
+}
+
+@code {
+    public string TextValue { get; set; } = string.Empty;
+
+    public List<Todo> TodoList { get; set; } = new List<Todo>();
+
+    protected void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+            AddTodo();
+    }
+
+    protected void AddTodo()
+    {
+        TodoList.Add(new Todo { Text = TextValue });
+        TextValue = string.Empty;
+    }
+
+    public class Todo
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+
+        public string Text { get; set; } = string.Empty;
+    }
+}
