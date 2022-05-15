@@ -8,7 +8,7 @@
 <MudForm>
     <MudGrid>
         <MudItem sm="10" xs="12">
-            <MudTextField @bind-Value="TextValue" Label="Add your todo" Variant="Variant.Text" @onkeydown="@OnKeyDown"></MudTextField>
+            <MudTextField @bind-Value="TextValue" Immediate="true" Label="Add your todo" Variant="Variant.Text" OnKeyDown="OnKeyDown" ></MudTextField>
         </MudItem>
         <MudItem sm="2" xs="12">
             <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" OnClick="AddTodo">Add</MudButton>
@@ -23,10 +23,12 @@
 {
     <MudText Typo="Typo.body1">No Todos</MudText>
 }
-
-@foreach (var todo in TodoList)
+else
 {
-    <MudText Typo="Typo.body1">@todo.Text</MudText>
+    foreach (var todo in TodoList)
+    {
+        <MudText Typo="Typo.body1">@todo.Text</MudText>
+    }
 }
 
 @code {
@@ -34,7 +36,7 @@
 
     public List<Todo> TodoList { get; set; } = new List<Todo>();
 
-    protected void OnKeyDown(KeyboardEventArgs e)
+    public void OnKeyDown(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
@@ -43,7 +45,7 @@
         }
     }
 
-    protected void AddTodo()
+    public void AddTodo()
     {
         var todo = new Todo { Text = TextValue };
         TodoList.Add(todo); ;
