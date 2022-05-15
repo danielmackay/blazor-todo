@@ -23,4 +23,5 @@
 
 ## Hosting
 
-Azure Static Web Apps
+Azure Static Web Apps.  Blazor Todo is designed to be deployed as a 'standalone' blazor app.  This enables it to be served by 
+a static file storage, and does NOT required to be hosted and served by an ASP.NET Core Server.
