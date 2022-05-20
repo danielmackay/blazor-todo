@@ -17,7 +17,6 @@
     </MudGrid>
 </MudForm>
 
-
 <div class="mt-10"></div>
 
 @if (TodoList.Count == 0)
@@ -28,7 +27,10 @@ else
 {
     foreach (var todo in TodoList)
     {
-        <MudText Typo="Typo.body1">@todo.Title</MudText>
+        <MudPaper @key="@todo.Id" Class="mt-1 pa-1">
+            <MudCheckBox Class="d-inline" T="bool" @bind-Checked="@todo.IsComplete" />
+            <MudText Class="d-inline" Style="@(todo.IsComplete ? "text-decoration:line-through;" : "")" Typo="Typo.body1">@todo.Title</MudText>
+        </MudPaper>
     }
 }
 
