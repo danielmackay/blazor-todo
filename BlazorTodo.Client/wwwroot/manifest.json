@@ -1,6 +1,6 @@
 {
-  "name": "BlazorTodo.Client",
-  "short_name": "BlazorTodo.Client",
+  "name": "Blazor Todo",
+  "short_name": "Blazor Todo",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
