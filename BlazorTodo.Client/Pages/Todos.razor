@@ -1,6 +1,7 @@
 ﻿@page "/todos"
 
 @using BlazorTodo.Client.Models
+@using BlazorTodo.Client.Services
 @using Serilog
 
 <MudText Typo="Typo.h2">Todos</MudText>
@@ -8,7 +9,7 @@
 <MudForm>
     <MudGrid>
         <MudItem sm="10" xs="12">
-            <MudTextField @bind-Value="TextValue" Immediate="true" Label="Add your todo" Variant="Variant.Text" OnKeyDown="OnKeyDown" ></MudTextField>
+            <MudTextField @bind-Value="TextValue" Immediate="true" Label="Add your todo" Variant="Variant.Text" OnKeyDown="OnKeyDown"></MudTextField>
         </MudItem>
         <MudItem sm="2" xs="12">
             <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" OnClick="AddTodo">Add</MudButton>
@@ -27,30 +28,67 @@ else
 {
     foreach (var todo in TodoList)
     {
-        <MudText Typo="Typo.body1">@todo.Text</MudText>
+        <MudText Typo="Typo.body1">@todo.Title</MudText>
     }
 }
 
+<MudButton Variant="Variant.Filled" FullWidth="false" Color="Color.Error" Class="mt-10" OnClick="ClearTodos">Clear</MudButton>
+
 @code {
+    [Inject]
+    public TodoListState State { get; set; }
+
     public string TextValue { get; set; } = string.Empty;
 
-    public List<Todo> TodoList { get; set; } = new List<Todo>();
+    public List<TodoItem> TodoList { get; set; } = new List<TodoItem>();
 
-    public void OnKeyDown(KeyboardEventArgs e)
+    public async Task OnKeyDown(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
             Log.Information("Enter key pressed");
-            AddTodo();
+            await AddTodo();
         }
     }
 
-    public void AddTodo()
+    public async Task AddTodo()
     {
-        var todo = new Todo { Text = TextValue };
+        var todo = new TodoItem { Title = TextValue };
         TodoList.Add(todo); ;
         TextValue = string.Empty;
 
+        await UpdateState();
+
         Log.Information("Added Todo {@todo}", todo);
+    }
+
+    public async Task ClearTodos()
+    {
+        TodoList.Clear();
+        await UpdateState();
+
+        Log.Information("Clearing todos");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadState();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadState()
+    {
+        var todoItems = await State.Get();
+        if (todoItems?.Count > 0)
+            TodoList.AddRange(todoItems);
+
+        Log.Information("Loaded state");
+    }
+
+    private async Task UpdateState()
+    {
+        await State.Set(TodoList);
+
+        Log.Information("Updating state");
     }
 }
