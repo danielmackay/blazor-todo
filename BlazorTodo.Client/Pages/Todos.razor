@@ -27,9 +27,10 @@ else
 {
     foreach (var todo in TodoList)
     {
-        <MudPaper @key="@todo.Id" Class="mt-1 pa-1">
-            <MudCheckBox Class="d-inline" T="bool" @bind-Checked="@todo.IsComplete" />
-            <MudText Class="d-inline" Style="@(todo.IsComplete ? "text-decoration:line-through;" : "")" Typo="Typo.body1">@todo.Title</MudText>
+        <MudPaper @key="@todo.Id" Class="d-flex flex-grow-1 gap-4 mt-1 pa-1">
+            <MudCheckBox T="bool" @bind-Checked="@todo.IsComplete" />
+            <MudText Class="flex-grow-1 pt-3" Style="@(todo.IsComplete ? "text-decoration:line-through;" : "")" Typo="Typo.body1">@todo.Title</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(e => DeleteTodo(todo))" />
         </MudPaper>
     }
 }
@@ -62,6 +63,15 @@ else
         await UpdateState();
 
         Log.Information("Added Todo {@todo}", todo);
+    }
+
+    public async Task DeleteTodo(TodoItem todo)
+    {
+        TodoList.Remove(todo);
+
+        await UpdateState();
+
+        Log.Information("Removed Todo {@todo}", todo);
     }
 
     public async Task ClearTodos()
