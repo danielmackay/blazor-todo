@@ -9,7 +9,7 @@ else
     foreach (var todo in TodoList)
     {
         <MudPaper @key="@todo.Id" Class="d-flex flex-grow-1 gap-4 mt-1 pa-1">
-            <MudCheckBox T="bool" @bind-Checked="@todo.IsComplete" />
+            <MudCheckBox T="bool" Checked="todo.IsComplete" CheckedChanged="(e => Complete(todo))" />
             <MudText Class="flex-grow-1 pt-3" Style="@(todo.IsComplete ? "text-decoration:line-through;" : "")" Typo="Typo.body1">@todo.Title</MudText>
             <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(e => OnDelete.InvokeAsync(todo))" />
         </MudPaper>
@@ -22,4 +22,13 @@ else
 
     [Parameter]
     public EventCallback<TodoItem> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<TodoItem> OnCompleted { get; set; }
+
+    private void Complete(TodoItem todo)
+    {
+        todo.IsComplete = !todo.IsComplete;
+        OnCompleted.InvokeAsync(todo);
+    }
 }

@@ -9,7 +9,7 @@
 
 <div class="mt-10"></div>
 
-<ListTodo TodoList="TodoList" OnDelete="DeleteTodo" />
+<ListTodo TodoList="TodoList" OnDelete="DeleteTodo" OnCompleted="CompleteTodo" />
 
 <ClearTodo OnClear="ClearTodos" />
 
@@ -50,6 +50,13 @@
         await UpdateState();
 
         Log.Information("Removed Todo {@todo}", todo);
+    }
+
+    private async Task CompleteTodo(TodoItem todo)
+    {
+        await UpdateState();
+
+        Log.Information("Completed Todo {@todo}", todo);
     }
 
     private async Task LoadState()
