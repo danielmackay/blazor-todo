@@ -1,0 +1,39 @@
+﻿@using Serilog
+
+<MudForm>
+    <MudGrid>
+        <MudItem sm="10" xs="12">
+            <MudTextField @bind-Value="TextValue" Immediate="true" Label="Add your todo" Variant="Variant.Text" OnKeyDown="OnKeyDown"></MudTextField>
+        </MudItem>
+        <MudItem sm="2" xs="12">
+            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" OnClick="Add">Add</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudForm>
+
+@code {
+    [Parameter]
+    public EventCallback<TodoItem> OnAddTodo { get; set; }
+
+    private string TextValue { get; set; } = string.Empty;
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            Log.Information("Enter key pressed");
+            await Add();
+        }
+    }
+
+    private async Task Add()
+    {
+        if (string.IsNullOrWhiteSpace(TextValue))
+            return;
+
+        var todo = new TodoItem { Title = TextValue };
+        TextValue = string.Empty;
+
+        await OnAddTodo.InvokeAsync(todo);
+    }
+}
