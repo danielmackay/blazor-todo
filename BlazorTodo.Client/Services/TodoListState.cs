@@ -4,22 +4,20 @@ namespace BlazorTodo.Client.Services;
 
 public class TodoListState
 {
-    private readonly StorageService storage;
-
-    private const string storageKey = "BlazorTodo.Client.TodoList";
+    private readonly StorageService _storage;
 
     public TodoListState(StorageService sessionStorage)
     {
-        this.storage = sessionStorage;
+        this._storage = sessionStorage;
     }
 
     public async Task<List<TodoItem>?> Get()
     {
-        return await storage.GetItemAsync<List<TodoItem>>(storageKey);
+        return await _storage.GetItemAsync<List<TodoItem>>(StorageKeys.TodoList);
     }
 
     public async Task Set(List<TodoItem> todoItems)
     {
-        await storage.SetItemAsync(storageKey, todoItems);
+        await _storage.SetItemAsync(StorageKeys.TodoList, todoItems);
     }
 }

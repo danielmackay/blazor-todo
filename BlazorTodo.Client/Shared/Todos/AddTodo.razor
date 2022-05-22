@@ -1,4 +1,8 @@
-﻿@using Serilog
+﻿@using BlazorTodo.Client.Services
+@using Serilog
+
+@implements IDisposable
+@inject AppState AppState
 
 <MudForm>
     <MudGrid>
@@ -12,23 +16,20 @@
 </MudForm>
 
 @code {
-    [Parameter]
-    public EventCallback<TodoItem> OnAddTodo { get; set; }
-
     private string TextValue { get; set; } = string.Empty;
 
     private bool AddDisabled => string.IsNullOrWhiteSpace(TextValue);
 
-    private async Task OnKeyDown(KeyboardEventArgs e)
+    private void OnKeyDown(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
             Log.Information("Enter key pressed");
-            await Add();
+            Add();
         }
     }
 
-    private async Task Add()
+    private void Add()
     {
         if (string.IsNullOrWhiteSpace(TextValue))
             return;
@@ -36,6 +37,10 @@
         var todo = new TodoItem { Title = TextValue };
         TextValue = string.Empty;
 
-        await OnAddTodo.InvokeAsync(todo);
+        AppState?.AddTodo(todo);
     }
+
+    protected override void OnInitialized() => AppState.OnChange += StateHasChanged;
+
+    public void Dispose() => AppState.OnChange -= StateHasChanged;
 }
