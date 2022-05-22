@@ -28,7 +28,6 @@ else
     private async Task Complete(TodoItem todo)
     {
         todo.IsComplete = !todo.IsComplete;
-
         await AppState.Sync();
     }
 
@@ -36,7 +35,6 @@ else
     {
         TodoList.AddRange(await AppState.GetTodos());
         AppState.OnChange += HandleStateChange;
-
     }
 
     private async void HandleStateChange()
