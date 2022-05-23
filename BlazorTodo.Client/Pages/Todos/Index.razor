@@ -5,72 +5,7 @@
 
 <MudText Typo="Typo.h2">Todos</MudText>
 
-<AddTodo OnAddTodo="AddTodo" />
-
+<AddTodo />
 <div class="mt-10"></div>
-
-<ListTodo TodoList="TodoList" OnDelete="DeleteTodo" OnCompleted="CompleteTodo" />
-
-<ClearTodo OnClear="ClearTodos" />
-
-@code {
-    [Inject]
-    public TodoListState State { get; set; }
-
-    public List<TodoItem> TodoList { get; set; } = new List<TodoItem>();
-
-    private async Task UpdateState()
-    {
-        await State.Set(TodoList);
-
-        Log.Information("Updating state");
-    }
-
-    private async Task ClearTodos()
-    {
-        TodoList.Clear();
-        await UpdateState();
-
-        Log.Information("Clearing todos");
-    }
-
-    private async Task AddTodo(TodoItem todo)
-    {
-        TodoList.Add(todo);
-
-        await UpdateState();
-
-        Log.Information("Added Todo {@todo}", todo);
-    }
-
-    private async Task DeleteTodo(TodoItem todo)
-    {
-        TodoList.Remove(todo);
-
-        await UpdateState();
-
-        Log.Information("Removed Todo {@todo}", todo);
-    }
-
-    private async Task CompleteTodo(TodoItem todo)
-    {
-        await UpdateState();
-
-        Log.Information("Completed Todo {@todo}", todo);
-    }
-
-    private async Task LoadState()
-    {
-        var todoItems = await State.Get();
-        if (todoItems?.Count > 0)
-            TodoList.AddRange(todoItems);
-
-        Log.Information("Loaded state");
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadState();
-        await base.OnInitializedAsync();
-    }
-}
+<ListTodo />
+<ClearTodo />
